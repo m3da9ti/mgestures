@@ -2,17 +2,21 @@ import musicalgestures
 
 def analyse_video(video_name, stack_title, preprocessing=False):
     if preprocessing:
-        mg = musicalgestures.MgObject(video_name, contrast=55, brightness=30)
+        mg = musicalgestures.MgVideo(video_name, contrast=55, brightness=30)
     else:
-        mg = musicalgestures.MgObject(video_name)
+        mg = musicalgestures.MgVideo(video_name)
 
-    # Horizontal  & vertical motiongrams, centroid & quantity of motion plots, motion videos & motion average
+    # Horizontal  & vertical motiongrams, centroid & quantity of motion plots, motion videos, directograms, impacts
+    # & motion average
     motiongrams = mg.motiongrams()
     motionplots = mg.motionplots()
     motion_video = mg.motionvideo()
+    directograms = mg.directograms()
+    impact_envelopes = mg.impacts(detection=False)
+    impact_detection = mg.impacts(detection=True)
     motion_average = motion_video.average()
-    motion_video.show()
-    my_list = musicalgestures.MgList(motiongrams, motionplots, motion_average)
+    my_list = musicalgestures.MgList(motiongrams, directograms, impact_envelopes, impact_detection, motionplots,
+                                     motion_average)
     figures_stack = my_list.as_figure(title=stack_title)
     print(figures_stack)
 
@@ -20,7 +24,7 @@ def analyse_video(video_name, stack_title, preprocessing=False):
     mg.history(mg.of + '_motion.avi', history_length=25)
 
     # sparse optical flow
-    flow_sparse = mg.flow.sparse()
+    mg.flow.sparse()
 
 
 if __name__ == '__main__':
